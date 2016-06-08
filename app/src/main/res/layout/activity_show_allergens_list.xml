@@ -34,7 +34,7 @@
                 android:src="@drawable/addbuttonicon"
                 android:layout_height="match_parent"
                 android:layout_width="70dp"
-                android:onClick="addNewAllergen"
+                android:onClick="AddNewAllergen"
                 android:scaleType="fitEnd"
                 android:background="@android:color/transparent"/>
 

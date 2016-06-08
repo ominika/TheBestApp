@@ -24,6 +24,7 @@ DODAJ nowy allergen i okno wprowadzenia nowego alergeniu
 public class ShowAllergensList extends AppCompatActivity implements AsyncResponse {
 
     private Context context;
+
     private ListView list;
     String[] items;
     ArrayList<String> allergens = new ArrayList<String>();
@@ -32,6 +33,7 @@ public class ShowAllergensList extends AppCompatActivity implements AsyncRespons
     int editTextLastLength;
 
     ConnectionShowAllergensList asyncTask = new ConnectionShowAllergensList(this);
+    //ConnectionAddAllergen asyncTaskAdd = new ConnectionAddAllergen(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,14 @@ public class ShowAllergensList extends AppCompatActivity implements AsyncRespons
     public void createConnection() {
         asyncTask.delegate = this;
         asyncTask.execute();
+    }
+
+    private void addNewAllergenToDataBase() {
+        String allergenName = editText.getText().toString();
+
+        new ConnectionAddAllergen(this).execute(allergenName);
+        //asyncTaskAdd.delegate = this;
+        //asyncTaskAdd.execute(allergenName);
     }
 
     public void processFinish(String[] itemsBack){
@@ -108,21 +118,14 @@ public class ShowAllergensList extends AppCompatActivity implements AsyncRespons
         adapter.notifyDataSetChanged();
     }
 
-    public void addNewAllergen(View w) {
-        Toast.makeText(context, "kuczaki", Toast.LENGTH_SHORT).show();
-        if (String.valueOf(allergens) == null) {
-            Toast.makeText(context, "nuullll", Toast.LENGTH_SHORT).show();
-            //addNewAllergenToDataBase();
-            //createConnection();
+    public void AddNewAllergen(View view)
+    {
+        Log.d("insteadOfToast", "zaczynam dodawac");
+        if (allergens.size() == 0) {
+            addNewAllergenToDataBase();
         } else {
-            Toast.makeText(context, "Wprowadź nową nazwę alergenu", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Wprowadź nową nazwę alergenu", Toast.LENGTH_SHORT).show();
+            Log.d("insteadOfToast","wprowadz nowa nazwe alernegu");
         }
-    }
-
-    private void addNewAllergenToDataBase() {
-        Intent intent = new Intent(ShowAllergensList.this, Interview.class);
-        startActivity(intent);
-        Toast.makeText(context, "Wprowadź nową nazwę alergenu!!!", Toast.LENGTH_SHORT).show();
-        //new ConnectionInsertAllergen(this).execute(editText.toString());
     }
 }
