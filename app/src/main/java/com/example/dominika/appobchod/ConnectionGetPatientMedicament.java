@@ -1,11 +1,10 @@
 package com.example.dominika.appobchod;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,19 +14,20 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-public class ConnectionAddAllergen extends AsyncTask<String, Void, String> implements LinkToConnect {
-    private Context context;
-    private String file_name = "add_allergen.php";
+public class ConnectionGetPatientMedicament extends AsyncTask<String, Void, String> implements LinkToConnect {
 
-    public ConnectionAddAllergen(Context context) {
+    private Context context;
+    private String file_name = "get_patient_medicament.php";
+
+    public AsyncResponse delegate = null;
+
+    public ConnectionGetPatientMedicament(Context context) {
         this.context = context;
     }
 
-    //public AsyncResponse delegate = null;
-
     @Override
     protected String doInBackground(String... params) {
-        String allergenName = params[0];
+        String patientPesel = params[0];
 
         String link;
         String data;
@@ -35,10 +35,9 @@ public class ConnectionAddAllergen extends AsyncTask<String, Void, String> imple
         String result;
 
         try {
-            data = "?nazwa=" + URLEncoder.encode(allergenName, "UTF-8");
-
+            data = "?pesel=" + URLEncoder.encode(patientPesel, "UTF-8");
             link = partial_link + file_name + data;
-            Log.d("LINK", link);
+
             URL url = new URL(link);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
@@ -54,19 +53,28 @@ public class ConnectionAddAllergen extends AsyncTask<String, Void, String> imple
     @Override
     protected void onPostExecute(String result) {
         String jsonStr = result;
+        String [] meds = null;
+
         if (jsonStr != null) {
             try {
-                JSONObject jsonObj = new JSONObject(jsonStr);
-                String query_result = jsonObj.getString("query_result");
-                if (query_result.equals("SUCCESS")) {
-                    Toast.makeText(context, "Dodano", Toast.LENGTH_SHORT).show();
+                JSONArray mJsonArray = new JSONArray(result);
+                JSONObject mJsonObject = new JSONObject();
+                meds = new String[mJsonArray.length()];
+                for (int i = 0; i < mJsonArray.length(); i++) {
+                    mJsonObject = mJsonArray.getJSONObject(i);
+                    meds[i] = mJsonObject.getString("nazwa");
+                    meds[i] += " ";
+                    meds[i] += mJsonObject.getString("substancja");
+                    meds[i] += "\n";
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
                 Toast.makeText(context, "Upss!", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(context, "Brak danych", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Brak leków", Toast.LENGTH_SHORT).show();
         }
+        delegate.processFinish(meds);
     }
+
 }

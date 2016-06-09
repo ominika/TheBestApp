@@ -8,6 +8,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -15,6 +16,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+
 /*
 TODO: Musisz sobie dodać w widoku teraz dwa przyciski
 tu Muzyka - kto to ma dodać???
@@ -65,6 +68,14 @@ public class ShowAllergensList extends AppCompatActivity implements AsyncRespons
 
             }
         });
+
+        Button button = (Button) findViewById(R.id.button);
+        assert button != null;
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                OnEndButtonClick();
+            }
+        });
     }
 
     public void createConnection() {
@@ -74,10 +85,7 @@ public class ShowAllergensList extends AppCompatActivity implements AsyncRespons
 
     private void addNewAllergenToDataBase() {
         String allergenName = editText.getText().toString();
-
         new ConnectionAddAllergen(this).execute(allergenName);
-        //asyncTaskAdd.delegate = this;
-        //asyncTaskAdd.execute(allergenName);
     }
 
     public void processFinish(String[] itemsBack){
@@ -93,17 +101,6 @@ public class ShowAllergensList extends AppCompatActivity implements AsyncRespons
         list.setAdapter(adapter);
     }
 
-    /*public void initList()
-    {
-        items = new String[]{"Alergenik1", "Alegren2", "Pelargina", "Paracetamol", "Muuuuzyka"};
-        allergens = new ArrayList<>(Arrays.asList(items));
-        Collections.sort(allergens);
-        //for(int i=0; i<9; i++)
-        //data.add(new PatientListViewItem(i,cars[i]));
-        adapter = new AllergensListViewItemAdapter(this, R.layout.allergin_list_view_item,  allergens);
-        list.setAdapter(adapter);
-    }*/
-
     public void searchItem(String textToSearch){
         if(editTextLastLength > textToSearch.length())
             initList();
@@ -111,7 +108,6 @@ public class ShowAllergensList extends AppCompatActivity implements AsyncRespons
         for(String item:items){
             if(!item.contains(textToSearch)) {
                 allergens.remove(item);
-                Log.d("aller", String.valueOf(allergens));
             }
         }
 
@@ -120,12 +116,22 @@ public class ShowAllergensList extends AppCompatActivity implements AsyncRespons
 
     public void AddNewAllergen(View view)
     {
-        Log.d("insteadOfToast", "zaczynam dodawac");
         if (allergens.size() == 0) {
             addNewAllergenToDataBase();
+            Intent intent = new Intent(ShowAllergensList.this, ShowAllergensList.class);
+            startActivity(intent);
+
         } else {
-            //Toast.makeText(context, "Wprowadź nową nazwę alergenu", Toast.LENGTH_SHORT).show();
-            Log.d("insteadOfToast","wprowadz nowa nazwe alernegu");
+            return;
         }
+    }
+
+    public void OnEndButtonClick(){
+        List<String> myList = adapter.choosen(); // w myList lista wybranych
+        //te petle pozniej usun!!!!!:D DŻOLO :D
+        for(int i=0; i<myList.size(); i++)
+            Toast.makeText(this, myList.get(i), Toast.LENGTH_SHORT).show();
+        //TU DODANIE DO BAZY
+        super.onBackPressed();
     }
 }

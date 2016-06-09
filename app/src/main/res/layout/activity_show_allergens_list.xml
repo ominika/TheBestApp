@@ -18,16 +18,16 @@
         android:layout_alignParentStart="true"
         android:weightSum="1">
 
-
         <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
 
             <EditText
-                android:layout_width="200dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/findAllerginTextEdit"
-                android:layout_gravity="center_horizontal" />
+                android:layout_weight="1" />
 
             <ImageButton
                 android:id="@+id/addAllergen"
@@ -37,6 +37,13 @@
                 android:onClick="AddNewAllergen"
                 android:scaleType="fitEnd"
                 android:background="@android:color/transparent"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Zakończ"
+                android:id="@+id/button"
+                android:layout_weight="0.15" />
 
         </LinearLayout>
 

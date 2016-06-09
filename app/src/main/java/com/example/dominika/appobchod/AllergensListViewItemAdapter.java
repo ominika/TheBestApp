@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +20,7 @@ public class AllergensListViewItemAdapter extends ArrayAdapter<String> {
     private int layout;
     List <String> data = null;
     Context context;
+    List <String> choosen_allergin = new ArrayList<String>();;
 
     public AllergensListViewItemAdapter(Context context, int resource, List<String> objects) {
         super(context, resource, objects);
@@ -45,6 +47,10 @@ public class AllergensListViewItemAdapter extends ArrayAdapter<String> {
         }
         return row;
         //return super.getView(position, convertView, parent);
+    }
+
+    public List<String> choosen() {
+        return choosen_allergin;
     }
 
     public class RowHolder{
